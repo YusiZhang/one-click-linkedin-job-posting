@@ -40,7 +40,7 @@ def post_job_to_linkedin(job_data: dict) -> dict:
 
         response = requests.post(LINKEDIN_API_URL, json=payload, headers=headers)
         response.raise_for_status()
-
+        logger.info(f"externalJobPostingId: {job_data['externalJobPostingId']}")
         logger.info(f"Successfully posted job to LinkedIn: {response.json()}")
         return response.json()
     except requests.exceptions.RequestException as e:
