@@ -38,12 +38,17 @@ def scrape_job():
 def post_job():
     try:
         job_data = request.json
-        if not job_data or 'jobTitle' not in job_data or 'jobDescription' not in job_data:
-            return jsonify({'error': 'Invalid job data'}), 400
+        required_fields = ['title', 'description', 'location', 'employmentStatus', 
+                         'workplaceTypes', 'companyApplyUrl', 'externalJobPostingId', 
+                         'listedAt']
+
+        missing_fields = [field for field in required_fields if field not in job_data]
+        if missing_fields:
+            return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
 
         # Post to LinkedIn
         result = post_job_to_linkedin(job_data)
-        
+
         return jsonify({'message': 'Job posted successfully', 'result': result})
     except Exception as e:
         logger.error(f"Error posting job: {str(e)}")

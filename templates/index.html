@@ -13,7 +13,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h1 class="text-center mb-4">Job Posting Scraper</h1>
-                
+
                 <!-- URL Input Form -->
                 <div class="card mb-4">
                     <div class="card-body">
@@ -38,11 +38,27 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Job Title</label>
-                            <input type="text" class="form-control" id="jobTitle" readonly>
+                            <input type="text" class="form-control" id="title" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="companyName" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-control" id="location" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Employment Status</label>
+                            <input type="text" class="form-control" id="employmentStatus" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Workplace Type</label>
+                            <input type="text" class="form-control" id="workplaceType" readonly>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Job Description</label>
-                            <textarea class="form-control" id="jobDescription" rows="10" readonly></textarea>
+                            <div class="form-control h-auto" id="description" style="min-height: 200px; overflow-y: auto;"></div>
                         </div>
                         <button id="postToLinkedIn" class="btn btn-success">
                             <i data-feather="linkedin"></i> Post to LinkedIn
