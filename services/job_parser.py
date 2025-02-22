@@ -21,7 +21,7 @@ def parse_job_content(content: str) -> dict:
             messages=[
                 {
                     "role": "system",
-                    "content": """Extract job posting details into LinkedIn's job posting schema format with the following required fields:
+                    "content": """You are a job posting parser. Extract job posting details and return ONLY a JSON object with these required fields:
                     {
                         "title": string (job title),
                         "description": string (use HTML tags for formatting),
@@ -36,14 +36,27 @@ def parse_job_content(content: str) -> dict:
                     }
 
                     Format the description professionally using only these HTML tags: <b>, <strong>, <u>, <i>, <br>, <p>, <ul>, <li>
-                    For missing required fields, use reasonable defaults based on the content."""
+                    For missing required fields, use reasonable defaults based on the content.
+
+                    Return ONLY the JSON object, no other text."""
                 },
                 {"role": "user", "content": content}
-            ],
-            response_format={"type": "json_object"}
+            ]
         )
 
-        parsed_data = json.loads(response.choices[0].message.content)
+        # Extract the JSON response
+        try:
+            parsed_data = json.loads(response.choices[0].message.content)
+        except json.JSONDecodeError:
+            # If the response isn't valid JSON, try to extract JSON-like content
+            content = response.choices[0].message.content
+            # Find the first { and last } to extract the JSON object
+            start = content.find('{')
+            end = content.rfind('}') + 1
+            if start >= 0 and end > start:
+                parsed_data = json.loads(content[start:end])
+            else:
+                raise Exception("Could not parse OpenAI response as JSON")
 
         # Ensure required fields have defaults
         parsed_data.setdefault("companyApplyUrl", "https://linkedin.com/jobs")
