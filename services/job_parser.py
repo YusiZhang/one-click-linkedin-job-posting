@@ -21,7 +21,7 @@ def parse_job_content(content: str, url: str) -> dict:
             messages=[
                 {
                     "role": "system",
-                    "content": """Extract job posting details into LinkedIn's job posting schema format with the following required fields:
+                    "content": """Parse the job posting content and return a JSON object matching LinkedIn's job posting schema with the following required fields:
                     {
                         "title": string (job title),
                         "description": string (use HTML tags for formatting),
@@ -30,13 +30,14 @@ def parse_job_content(content: str, url: str) -> dict:
                         "employmentStatus": string (one of: FULL_TIME, PART_TIME, CONTRACT, INTERNSHIP, TEMPORARY, VOLUNTEER),
                         "workplaceTypes": array with one of ["on-site", "hybrid", "remote"],
                         "externalJobPostingId": string (generate a unique ID),
-                        "companyApplyUrl": string (extract if found, otherwise use a placeholder),
+                        "companyApplyUrl": string (extract if found, otherwise use input URL),
                         "listedAt": integer (current timestamp in milliseconds),
                         "jobPostingOperationType": string (always set as "CREATE")
                     }
 
                     Format the description professionally using only these HTML tags: <b>, <strong>, <u>, <i>, <br>, <p>, <ul>, <li>
-                    For missing required fields, use reasonable defaults based on the content."""
+                    For missing required fields, use reasonable defaults based on the content.
+                    Return the response strictly as a JSON object."""
                 },
                 {"role": "user", "content": content}
             ],
@@ -65,7 +66,7 @@ def parse_job_content(content: str, url: str) -> dict:
         else:
             parsed_data["workplaceTypes"] = ["On-site"]
 
-        print(parsed_data)
+        logger.info("Successfully parsed job content")
         return parsed_data
     except Exception as e:
         logger.error(f"Failed to parse job content: {str(e)}")

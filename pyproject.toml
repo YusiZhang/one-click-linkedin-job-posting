@@ -6,6 +6,7 @@ requires-python = ">=3.11"
 dependencies = [
     "email-validator>=2.2.0",
     "firecrawl-py>=1.12.0",
+    "flask-login>=0.6.3",
     "flask>=3.1.0",
     "flask-sqlalchemy>=3.1.1",
     "gunicorn>=23.0.0",
@@ -14,4 +15,5 @@ dependencies = [
     "requests>=2.32.3",
     "sendgrid>=6.11.0",
     "trafilatura>=2.0.0",
+    "flask-wtf>=1.2.2",
 ]
