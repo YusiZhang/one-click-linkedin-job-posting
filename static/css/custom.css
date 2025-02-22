@@ -1,0 +1,26 @@
+/* Custom styles to complement Bootstrap */
+.card {
+    border-radius: 8px;
+    border: 1px solid var(--bs-border-color);
+}
+
+.form-control:readonly {
+    background-color: var(--bs-secondary-bg);
+    opacity: 0.8;
+}
+
+.btn i {
+    margin-right: 8px;
+}
+
+#alertArea {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+}
+
+.alert {
+    margin-bottom: 10px;
+}

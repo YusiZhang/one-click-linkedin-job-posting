@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Posting Scraper</title>
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h1 class="text-center mb-4">Job Posting Scraper</h1>
+                
+                <!-- URL Input Form -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="scrapeForm">
+                            <div class="mb-3">
+                                <label for="jobUrl" class="form-label">Job Posting URL</label>
+                                <input type="url" class="form-control" id="jobUrl" required
+                                       placeholder="Enter the job posting URL">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i data-feather="search"></i> Scrape Job
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Job Preview -->
+                <div id="jobPreview" class="card mb-4 d-none">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Job Preview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Job Title</label>
+                            <input type="text" class="form-control" id="jobTitle" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Job Description</label>
+                            <textarea class="form-control" id="jobDescription" rows="10" readonly></textarea>
+                        </div>
+                        <button id="postToLinkedIn" class="btn btn-success">
+                            <i data-feather="linkedin"></i> Post to LinkedIn
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div id="alertArea"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
