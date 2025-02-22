@@ -25,10 +25,10 @@ def scrape_job():
 
         # Scrape the job page using Firecrawl
         scraped_content = scrape_job_page(url)
-        
-        # Parse the content using OpenAI
+
+        # Parse the content using OpenAI to match LinkedIn's schema
         job_details = parse_job_content(scraped_content)
-        
+
         return jsonify(job_details)
     except Exception as e:
         logger.error(f"Error scraping job: {str(e)}")
