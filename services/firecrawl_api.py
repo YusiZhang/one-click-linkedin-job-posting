@@ -1,22 +1,27 @@
+import os
 import logging
-import trafilatura
+from firecrawl import FirecrawlApp
 
 logger = logging.getLogger(__name__)
 
+FIRECRAWL_API_KEY = os.environ.get("FIRECRAWL_API_KEY")
+app = FirecrawlApp(api_key=FIRECRAWL_API_KEY)
+
 def scrape_job_page(url: str) -> str:
     """
-    Scrapes the job posting page using Trafilatura
+    Scrapes the job posting page using Firecrawl API
     """
     try:
-        downloaded = trafilatura.fetch_url(url)
-        if not downloaded:
-            raise Exception("Failed to download the page")
+        # Use the SDK to scrape the URL with markdown format
+        scrape_result = app.scrape_url(
+            url,
+            params={'formats': ['markdown']}
+        )
 
-        text = trafilatura.extract(downloaded)
-        if not text:
-            raise Exception("Failed to extract content from the page")
+        if not scrape_result or 'content' not in scrape_result:
+            raise Exception("No content returned from Firecrawl")
 
-        return text
+        return scrape_result['content']
     except Exception as e:
-        logger.error(f"Scraping error: {str(e)}")
+        logger.error(f"Firecrawl API error: {str(e)}")
         raise Exception(f"Failed to scrape page: {str(e)}")
