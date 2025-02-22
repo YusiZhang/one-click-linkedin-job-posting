@@ -11,7 +11,7 @@ openai = OpenAI(api_key=OPENAI_API_KEY)
 
 logger = logging.getLogger(__name__)
 
-def parse_job_content(content: str) -> dict:
+def parse_job_content(content: str, url: str) -> dict:
     """
     Uses OpenAI to parse job content into LinkedIn's job posting schema format
     """
@@ -21,7 +21,7 @@ def parse_job_content(content: str) -> dict:
             messages=[
                 {
                     "role": "system",
-                    "content": """You are a job posting parser. Extract job posting details and return ONLY a JSON object with these required fields:
+                    "content": """Extract job posting details into LinkedIn's job posting schema format with the following required fields:
                     {
                         "title": string (job title),
                         "description": string (use HTML tags for formatting),
@@ -36,30 +36,17 @@ def parse_job_content(content: str) -> dict:
                     }
 
                     Format the description professionally using only these HTML tags: <b>, <strong>, <u>, <i>, <br>, <p>, <ul>, <li>
-                    For missing required fields, use reasonable defaults based on the content.
-
-                    Return ONLY the JSON object, no other text."""
+                    For missing required fields, use reasonable defaults based on the content."""
                 },
                 {"role": "user", "content": content}
-            ]
+            ],
+            response_format={"type": "json_object"}
         )
 
-        # Extract the JSON response
-        try:
-            parsed_data = json.loads(response.choices[0].message.content)
-        except json.JSONDecodeError:
-            # If the response isn't valid JSON, try to extract JSON-like content
-            content = response.choices[0].message.content
-            # Find the first { and last } to extract the JSON object
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            if start >= 0 and end > start:
-                parsed_data = json.loads(content[start:end])
-            else:
-                raise Exception("Could not parse OpenAI response as JSON")
+        parsed_data = json.loads(response.choices[0].message.content)
 
         # Ensure required fields have defaults
-        parsed_data.setdefault("companyApplyUrl", "https://linkedin.com/jobs")
+        parsed_data.setdefault("companyApplyUrl", url)
         parsed_data.setdefault("externalJobPostingId", f"job_{int(datetime.now().timestamp())}")
         parsed_data.setdefault("listedAt", int(datetime.now().timestamp() * 1000))
         parsed_data.setdefault("jobPostingOperationType", "CREATE")
@@ -78,6 +65,7 @@ def parse_job_content(content: str) -> dict:
         else:
             parsed_data["workplaceTypes"] = ["On-site"]
 
+        print(parsed_data)
         return parsed_data
     except Exception as e:
         logger.error(f"Failed to parse job content: {str(e)}")

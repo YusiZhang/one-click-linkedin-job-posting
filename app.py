@@ -27,7 +27,7 @@ def scrape_job():
         scraped_content = scrape_job_page(url)
 
         # Parse the content using OpenAI to match LinkedIn's schema
-        job_details = parse_job_content(scraped_content)
+        job_details = parse_job_content(scraped_content, url)
 
         return jsonify(job_details)
     except Exception as e:
