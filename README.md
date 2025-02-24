@@ -52,7 +52,9 @@ A sophisticated web application that automates job posting discovery and LinkedI
 2. **Install Dependencies**
    The project uses Python 3.11+ and requires the following packages:
    ```bash
-   pip install flask openai firecrawl-py requests flask-wtf
+   # install uv if needed
+   uv venv
+   uv sync
    ```
 
 3. **Configure Environment Variables**
