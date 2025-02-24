@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const statusSpinner = document.getElementById('statusSpinner');
     const taskProgress = document.getElementById('taskProgress');
     const taskError = document.getElementById('taskError');
+    const linkedinJobLink = document.getElementById('linkedinJobLink');
 
     // Store job data globally
     let currentJobData = null;
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
         taskStatus.classList.remove('d-none');
         taskProgress.classList.remove('d-none');
         taskError.classList.add('d-none');
+        linkedinJobLink.classList.add('d-none');
 
         // Clear any existing polling
         if (statusPollingInterval) {
@@ -77,14 +79,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.status === 'SUCCEEDED') {
                     clearInterval(statusPollingInterval);
                     statusSpinner.classList.add('d-none');
-                    showAlert('Job posted successfully!', 'success');
                     taskProgress.classList.add('d-none');
+
+                    if (data.jobPosting) {
+                        // Extract the ID from the URN format (urn:li:jobPosting:123456789)
+                        const jobId = data.jobPosting.split(':').pop();
+                        const jobUrl = `https://www.linkedin.com/jobs/view/${jobId}`;
+
+                        // Update and show the LinkedIn job link
+                        const jobLink = linkedinJobLink.querySelector('a');
+                        jobLink.href = jobUrl;
+                        linkedinJobLink.classList.remove('d-none');
+                    }
+
+                    showAlert('Job posted successfully!', 'success');
                 } else if (data.status === 'FAILED') {
                     clearInterval(statusPollingInterval);
                     statusSpinner.classList.add('d-none');
                     taskError.textContent = data.error || 'Job posting failed';
                     taskError.classList.remove('d-none');
                     taskProgress.classList.add('d-none');
+                    linkedinJobLink.classList.add('d-none');
                 }
 
                 // Check for timeout
@@ -94,6 +109,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     taskError.textContent = 'Operation timed out after 5 minutes';
                     taskError.classList.remove('d-none');
                     taskProgress.classList.add('d-none');
+                    linkedinJobLink.classList.add('d-none');
                 }
             } catch (error) {
                 console.error('Error polling status:', error);
