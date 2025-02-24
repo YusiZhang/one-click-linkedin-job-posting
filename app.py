@@ -3,7 +3,7 @@ import logging
 from flask import Flask, render_template, request, jsonify
 from services.firecrawl_api import scrape_job_page
 from services.job_parser import parse_job_content
-from services.linkedin_api import post_job_to_linkedin
+from services.linkedin_api import post_job_to_linkedin, check_job_status
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -46,10 +46,30 @@ def post_job():
         if missing_fields:
             return jsonify({'error': f'Missing required fields: {", ".join(missing_fields)}'}), 400
 
-        # Post to LinkedIn
-        result = post_job_to_linkedin(job_data)
+        # Post to LinkedIn and get task ID
+        task_id = post_job_to_linkedin(job_data)
 
-        return jsonify({'message': 'Job posted successfully', 'result': result})
+        if not task_id:
+            return jsonify({'error': 'Failed to get task ID from LinkedIn'}), 500
+
+        return jsonify({
+            'message': 'Job posting task created successfully',
+            'taskId': task_id
+        })
     except Exception as e:
         logger.error(f"Error posting job: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/job-status/<task_id>', methods=['GET'])
+def get_job_status(task_id):
+    try:
+        if not task_id:
+            return jsonify({'error': 'Task ID is required'}), 400
+
+        # Check job status from LinkedIn
+        status = check_job_status(task_id)
+
+        return jsonify(status)
+    except Exception as e:
+        logger.error(f"Error checking job status: {str(e)}")
         return jsonify({'error': str(e)}), 500

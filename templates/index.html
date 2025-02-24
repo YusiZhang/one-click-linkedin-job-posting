@@ -66,6 +66,25 @@
                     </div>
                 </div>
 
+                <!-- Task Status -->
+                <div id="taskStatus" class="card mb-4 d-none">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">LinkedIn Posting Status</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="spinner-border text-primary me-2 d-none" id="statusSpinner" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <div id="taskStatusText">Initializing...</div>
+                        </div>
+                        <div class="progress mb-3 d-none" id="taskProgress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <div id="taskError" class="alert alert-danger d-none"></div>
+                    </div>
+                </div>
+
                 <!-- Alerts -->
                 <div id="alertArea"></div>
             </div>
